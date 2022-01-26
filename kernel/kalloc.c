@@ -80,3 +80,21 @@ kalloc(void)
     memset((char*)r, 5, PGSIZE); // fill with junk
   return (void*)r;
 }
+
+// get the amount of free memory in bytes.
+// traverse the freelist and multiply by pagesize.
+// For the syscall lab - sysinfo task.
+int kgetfree(void)
+{
+  struct run * r;
+  int numfreepages=0;
+  acquire(&kmem.lock);
+  r = kmem.freelist;
+  while(r)
+  {
+  	numfreepages++;
+	r=r->next;
+  }
+  release(&kmem.lock);
+  return numfreepages*PGSIZE;
+}

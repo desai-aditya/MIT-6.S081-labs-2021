@@ -655,3 +655,19 @@ procdump(void)
     printf("\n");
   }
 }
+
+
+// Counts the number of processes whose stat is not UNUSED.
+// For syscall lab - sysinfo task.
+int
+countfreeprocs(void)
+{
+  int numfree=0;
+  struct proc *p;
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->state != UNUSED)
+		numfree++;
+  }
+  return numfree;
+}
+
