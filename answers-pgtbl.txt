@@ -12,9 +12,9 @@ page table 0x0000000087f6e000
  .. .. ..510: pte 0x0000000021fddc07 pa 0x0000000087f77000
  .. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000
 
-pages 0,1,2 are user text and code pages
+page 0 is user text and code page
+page 1 is guard page
+page 2 is the user stack
 pages 509,510,511 are the USYSCALL, TRAPFRAME and TRAMPOLINE respectively
-seems that page 1's user mode bit is not set and so it is probably the text section
-page 0 is probably the data section
-page 2 may be the .bss section
+seems that page 1's user mode bit is not set and so it is probably the guard page before the user stack
 third to last page is the USYSCALL page as implemented in this assignment
