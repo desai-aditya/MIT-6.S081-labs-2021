@@ -81,6 +81,43 @@ int
 sys_pgaccess(void)
 {
   // lab pgtbl: your code here.
+
+  uint64 first_user_page_va, user_buf;
+  int npages;
+
+  if(argaddr(0,&first_user_page_va)<0 || argint(1,&npages) < 0 || argaddr(2,&user_buf) < 0)
+	  return -1;
+
+  // can only check 32 pages at max
+  if(npages > 32) 
+	  return -1;
+  
+  uint32 kernel_bitmask_buffer = 0;
+  
+  struct proc * p = myproc();
+
+  // go through all virtual pages
+  for( int i = 0 ; i < npages; i ++)
+  {
+	  // get the corrent page table entry of the page
+	  pte_t * pte = walk(p->pagetable,first_user_page_va,0);
+	  // if the page's access bit was set
+	  if(*pte  & PTE_A)
+	  {
+		  // clear the access bit 
+		  *pte = *pte & (~PTE_A);
+		  kernel_bitmask_buffer = kernel_bitmask_buffer | (1<<i);
+	  }
+
+	  first_user_page_va += PGSIZE;
+  }
+
+  // copyout the kernel bitmask buffer to user space
+
+  if(copyout(p->pagetable, user_buf, (char *)&kernel_bitmask_buffer, sizeof(kernel_bitmask_buffer)) < 0)
+     return -1;
+
+  
   return 0;
 }
 #endif
