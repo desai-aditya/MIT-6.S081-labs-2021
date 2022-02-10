@@ -135,6 +135,10 @@ sys_sigalarm(void)
 uint64
 sys_sigreturn(void)
 {
-  myproc()->isexecuting=0;
+  struct proc * p = myproc();
+  memmove(p->trapframe,&p->contextb4periodic,sizeof(p->contextb4periodic));
+  //p->trapframe->epc = p->epcb4periodic;
+  p->isperiodicexecuting=0;
+
   return 0;
 }

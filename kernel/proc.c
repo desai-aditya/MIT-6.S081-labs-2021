@@ -145,8 +145,11 @@ found:
   p->periodicfn  = 0;
   p->lasttick    = 0;
   p->nticks      = -1;
-  p->isexecuting = 0;
+  p->epcb4periodic = 0;
+  p->isperiodicexecuting = 0;
   
+  // clear the context struct for the periodic function
+  memset(&p->contextb4periodic, 0, sizeof(p->contextb4periodic));
   
   return p;
 }

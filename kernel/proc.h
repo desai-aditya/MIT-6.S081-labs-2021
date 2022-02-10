@@ -110,5 +110,7 @@ struct proc {
   void (*periodicfn)();        // function pointer to run the periodic fn
   int nticks;                  // how frequently to run
   int lasttick;                // when was the last time periodicfn ran
-  int isexecuting;                // when was the last time periodicfn ran
+  int isperiodicexecuting;     // when was the last time periodicfn ran
+  int epcb4periodic;           // saved epc before the context swtiched to periodic function
+  struct trapframe contextb4periodic; // the context before the periodic function was called
 };

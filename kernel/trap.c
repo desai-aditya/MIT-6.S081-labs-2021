@@ -81,9 +81,9 @@ usertrap(void)
   {
 	// if the time is up and periodicfn needs to be triggered
 	acquire(&tickslock);
-	if(p->nticks !=-1 && !(p->isexecuting) && (ticks - (p->lasttick) >= p->nticks) )
+	if(p->nticks !=-1 && !(p->isperiodicexecuting) && (ticks - (p->lasttick) >= p->nticks) )
 	{
-	  p->isexecuting=1;
+	  p->isperiodicexecuting=1;
 	}
 	release(&tickslock);
 	// give up the CPU. 
@@ -130,11 +130,13 @@ usertrapret(void)
 
   // if the periodic function is executing then set the sepc to its address
   acquire(&tickslock);
-  if(p->nticks !=-1 && (p->isexecuting) && (ticks - (p->lasttick) >= p->nticks) )
+  if(p->nticks !=-1 && (p->isperiodicexecuting) && (ticks - (p->lasttick) >= p->nticks) )
 	{
 	  p->lasttick = ticks;
   	  w_sepc((uint64)p->periodicfn);
 	  //printf("calling function now\n");
+	  memmove(&p->contextb4periodic,p->trapframe,sizeof(p->contextb4periodic));
+	  //p->epcb4periodic = p->trapframe->epc;
 	}
   release(&tickslock);
 
