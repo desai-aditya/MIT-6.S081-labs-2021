@@ -130,8 +130,9 @@ usertrapret(void)
 
   // if the periodic function is executing then set the sepc to its address
   acquire(&tickslock);
-  if(p->nticks !=-1 && (p->isperiodicexecuting) && (ticks - (p->lasttick) >= p->nticks) )
+  if((p->nticks !=-1) && (p->isperiodicexecuting==1) && (ticks - (p->lasttick) >= p->nticks) )
 	{
+	  p->isperiodicexecuting=2;
 	  p->lasttick = ticks;
   	  w_sepc((uint64)p->periodicfn);
 	  //printf("calling function now\n");

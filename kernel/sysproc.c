@@ -124,8 +124,6 @@ sys_sigalarm(void)
 	  p->lasttick = ticks;
 	  release(&tickslock);
   }
-
-
 	
   return 0;
 }
