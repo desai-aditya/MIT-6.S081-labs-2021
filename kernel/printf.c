@@ -119,6 +119,8 @@ panic(char *s)
 {
   pr.locking = 0;
   printf("panic: ");
+  printf("backtrace: ");
+  backtrace();
   printf(s);
   printf("\n");
   panicked = 1; // freeze uart output from other CPUs
@@ -131,4 +133,18 @@ printfinit(void)
 {
   initlock(&pr.lock, "pr");
   pr.locking = 1;
+}
+
+// function to backtrace and print the return addresses from the function call stack
+void backtrace()
+{
+	//printf("backtrace\n");
+	uint64* fp = (uint64*)r_fp();
+	while(fp<(uint64*)PGROUNDUP((uint64)fp))
+	{
+		printf("%p\n",*(fp-1)); 
+		//printf("%p %p\n",fp,PGROUNDUP((uint64)fp));
+		fp = (uint64*)*(fp-2);
+	}
+
 }
