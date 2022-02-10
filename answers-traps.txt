@@ -1,0 +1,11 @@
+Ans1) registers a0,a1,a2 contain function args. int "13" is held in a2 register for example
+
+Ans2) The call to function f in the assembly was basically omitted since the compiler optimized out the simple calculation (that of essentially adding 4 to the args) and simply put the final result(12) in place of the actual function calls( f(8)+1)
+
+Ans3) printf is located at 0000000000000628
+
+Ans4) ra = 0x38 right after the call to printf
+
+Ans5) The output is "HE110 World". if rsicv were big endian then the usigned int i would have to be equal to 0x726c6400 since things would be read differently from memory. The value 57616 would not need to be different. since it is printing just a hex value and not memory interaction happens.
+
+Ans6) In printf("x=%d y=%d", 3); the value printed for y would basically depend on the value in the register a2 whatever it is.
