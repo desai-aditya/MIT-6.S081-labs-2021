@@ -97,3 +97,23 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+// sigalarm syscall that periodically triggers a function passed as argument
+uint64
+sys_sigalarm(void)
+{
+  uint ticks;
+  ticks=1;
+  printf("%d\n",ticks);
+
+  return 0;
+}
+
+//
+// sigreturn syscall that exits from the periodic function to resume where the process was interrupted.
+uint64
+sys_sigreturn(void)
+{
+  return 0;
+}
