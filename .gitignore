@@ -22,3 +22,7 @@ xv6.out*
 submissions/
 ph
 barrier
+.gdb_history
+github-token
+tags
+
