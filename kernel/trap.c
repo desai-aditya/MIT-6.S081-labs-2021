@@ -76,9 +76,19 @@ usertrap(void)
   if(p->killed)
     exit(-1);
 
-  // give up the CPU if this is a timer interrupt.
+  // timer interrupt
   if(which_dev == 2)
+  {
+	// if the time is up and periodicfn needs to be triggered
+	acquire(&tickslock);
+	if(p->nticks !=-1 && !(p->isexecuting) && (ticks - (p->lasttick) >= p->nticks) )
+	{
+	  p->isexecuting=1;
+	}
+	release(&tickslock);
+	// give up the CPU. 
     yield();
+  }
 
   usertrapret();
 }
@@ -117,6 +127,16 @@ usertrapret(void)
 
   // set S Exception Program Counter to the saved user pc.
   w_sepc(p->trapframe->epc);
+
+  // if the periodic function is executing then set the sepc to its address
+  acquire(&tickslock);
+  if(p->nticks !=-1 && (p->isexecuting) && (ticks - (p->lasttick) >= p->nticks) )
+	{
+	  p->lasttick = ticks;
+  	  w_sepc((uint64)p->periodicfn);
+	  //printf("calling function now\n");
+	}
+  release(&tickslock);
 
   // tell trampoline.S the user page table to switch to.
   uint64 satp = MAKE_SATP(p->pagetable);

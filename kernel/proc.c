@@ -141,6 +141,13 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
+  // for the trap lab
+  p->periodicfn  = 0;
+  p->lasttick    = 0;
+  p->nticks      = -1;
+  p->isexecuting = 0;
+  
+  
   return p;
 }
 

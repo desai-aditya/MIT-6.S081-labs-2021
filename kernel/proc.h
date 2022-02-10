@@ -105,4 +105,10 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+
+  // for the traps lab
+  void (*periodicfn)();        // function pointer to run the periodic fn
+  int nticks;                  // how frequently to run
+  int lasttick;                // when was the last time periodicfn ran
+  int isexecuting;                // when was the last time periodicfn ran
 };

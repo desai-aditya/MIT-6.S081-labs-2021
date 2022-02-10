@@ -103,10 +103,30 @@ sys_uptime(void)
 uint64
 sys_sigalarm(void)
 {
-  uint ticks;
-  ticks=1;
-  printf("%d\n",ticks);
+  int nticks;
+  uint64 fn;
+	
+  if(argint(0,&nticks)<0 || argaddr(1,&fn) <0 )
+	  return -1;
 
+  struct proc * p = myproc();
+  if( nticks == 0 && fn == 0)
+  {
+	  p->periodicfn = 0;
+	  p->nticks = -1;
+	  p->lasttick = 0;
+  }
+  else
+  {
+	  p->periodicfn = (void(*)())fn;
+	  p->nticks = nticks;
+	  acquire(&tickslock);
+	  p->lasttick = ticks;
+	  release(&tickslock);
+  }
+
+
+	
   return 0;
 }
 
@@ -115,5 +135,6 @@ sys_sigalarm(void)
 uint64
 sys_sigreturn(void)
 {
+  myproc()->isexecuting=0;
   return 0;
 }
